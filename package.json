@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "parcel site/index.html --open",
-    "build": "parcel build site/index.html --dist-dir docs"
+    "start": "parcel serve ./site/index.html",
+    "build": "parcel build ./site/index.html --dist-dir docs --public-url ./"
   },
   "dependencies": {
     "xstate": "^4.12.0"

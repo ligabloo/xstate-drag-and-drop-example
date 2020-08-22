@@ -1,2 +1,0 @@
-*{margin:0;padding:0;box-sizing:border-box}body,html{height:100%}body{padding:1rem}.box{position:relative;background-color:grey;width:20vmin;height:20vmin;border-radius:8px;transition:all 50ms ease,transform .25s ease,opacity .3s ease}#red{background-color:red;top:0}#blue{background-color:#00f}#green{background-color:green}.box[data-dragging=true]{opacity:.75;transform:scale(1.2)}
-/*# sourceMappingURL=index.d8796467.css.map */
