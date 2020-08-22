@@ -1,0 +1,2 @@
+# XState - Simple Drag and Drop example
+A simple implementation of drag and drop using [XState](https://xstate.js.org/). Based on [this video by Fun Fun Function](https://www.youtube.com/watch?v=uRfQJJArZEg) (R.I.P.).

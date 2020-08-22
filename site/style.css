@@ -1,0 +1,41 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  padding: 1rem;
+}
+
+.box {
+  position: relative;
+  background-color: gray;
+  width: 20vmin;
+  height: 20vmin;
+  border-radius: 8px;
+  transition: all 50ms ease, transform 250ms ease, opacity 300ms ease;
+}
+
+#red {
+  background-color: red;
+  top: 0;
+}
+
+#blue {
+  background-color: blue;
+}
+
+#green {
+  background-color: green;
+}
+
+.box[data-dragging="true"] {
+  opacity: 0.75;
+  transform: scale(1.2);
+}
