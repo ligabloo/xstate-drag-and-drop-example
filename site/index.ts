@@ -1,7 +1,7 @@
 import { interpret, createMachine, assign } from "xstate";
 
 interface DragAndDropContext {
-  element: HTMLElement,
+  element: HTMLElement;
   draggables: Map<string, { x: number; y: number }>;
   order: Array<string>;
   px: number;
@@ -12,17 +12,17 @@ interface DragAndDropContext {
 
 type DragAndDropState =
   | {
-    value: "idle";
-    context: DragAndDropContext & {
-      element: null;
-    };
-  }
+      value: "idle";
+      context: DragAndDropContext & {
+        element: null;
+      };
+    }
   | {
-    value: "dragging";
-    context: DragAndDropContext & {
-      element: HTMLElement;
+      value: "dragging";
+      context: DragAndDropContext & {
+        element: HTMLElement;
+      };
     };
-  };
 
 const dragAndDropMachine = createMachine<
   DragAndDropContext,
@@ -90,26 +90,20 @@ const dragAndDropMachine = createMachine<
           };
         }
       ),
-      onDraggingStart: assign(
-        (context: DragAndDropContext) => {
+      onDraggingStart: assign((context: DragAndDropContext) => {
+        context.order = context.order
+          .filter((id) => id !== context.element.id)
+          .concat(context.element.id);
 
-
-          context.order = context.order
-            .filter((id) => id !== context.element.id)
-            .concat(context.element.id);
-
-          const draggableElements = document.querySelectorAll(
-            "[data-draggable]"
-          );
-          draggableElements.forEach((draggable: HTMLElement) => {
-            const isOrdered = context.order.includes(draggable.id);
-            draggable.style.zIndex = `${
-              isOrdered ? context.order.indexOf(draggable.id) + 1 : 0
-              }`;
-          });
-          return {};
-        }
-      ),
+        const draggableElements = document.querySelectorAll("[data-draggable]");
+        draggableElements.forEach((draggable: HTMLElement) => {
+          const isOrdered = context.order.includes(draggable.id);
+          draggable.style.zIndex = `${
+            isOrdered ? context.order.indexOf(draggable.id) + 1 : 0
+          }`;
+        });
+        return {};
+      }),
       onDraggingUpdate: assign(
         (context: DragAndDropContext, event: MouseEvent) => {
           return {
@@ -139,11 +133,11 @@ const dragAndDropMachine = createMachine<
 const dragAndDropService = interpret(dragAndDropMachine)
   .onTransition((state) => {
     if (state.changed) {
-
-
       switch (state.value) {
         case "dragging": {
-          const draggable = state.context.draggables.get(state.context.element.id);
+          const draggable = state.context.draggables.get(
+            state.context.element.id
+          );
           state.context.element.dataset.dragging = "true";
           state.context.element.style.setProperty(
             "left",
