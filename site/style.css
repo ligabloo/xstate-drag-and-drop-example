@@ -19,7 +19,7 @@ body {
   width: 20vmin;
   height: 20vmin;
   border-radius: 8px;
-  transition: all 50ms ease, transform 250ms ease, opacity 300ms ease;
+  transition: all 100ms ease-out, transform 250ms ease, opacity 300ms ease;
 }
 
 #red {

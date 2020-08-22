@@ -2,6 +2,7 @@ import { interpret, createMachine, assign } from "xstate";
 
 interface DragAndDropContext {
   id: string;
+  node: HTMLElement,
   draggables: Map<string, { x: number; y: number }>;
   order: Array<string>;
   px: number;
@@ -14,13 +15,14 @@ type DragAndDropState =
   | {
     value: "idle";
     context: DragAndDropContext & {
-      target: null;
+      id: null,
+      node: null;
     };
   }
   | {
     value: "dragging";
     context: DragAndDropContext & {
-      target: EventTarget | null;
+      node: HTMLElement;
     };
   };
 
@@ -33,6 +35,7 @@ const dragAndDropMachine = createMachine<
     initial: "idle",
     context: {
       id: null,
+      node: null,
       draggables: new Map(),
       order: [],
       px: 0,
@@ -84,6 +87,7 @@ const dragAndDropMachine = createMachine<
           return {
             ...context,
             id: target.id,
+            node: target,
             draggables: context.draggables.set(target.id, draggable),
             px: event.clientX,
             py: event.clientY,
@@ -92,11 +96,11 @@ const dragAndDropMachine = createMachine<
       ),
       onDraggingStart: assign(
         (context: DragAndDropContext, event: MouseEvent) => {
-          const target = document.getElementById(context.id) as HTMLElement;
+
 
           context.order = context.order
-            .filter((id) => id !== target.id)
-            .concat(target.id);
+            .filter((id) => id !== context.node.id)
+            .concat(context.node.id);
 
           const draggableElements = document.querySelectorAll(
             "[data-draggable]"
@@ -107,7 +111,7 @@ const dragAndDropMachine = createMachine<
               isOrdered ? context.order.indexOf(draggable.id) + 1 : 0
               }`;
           });
-          return context;
+          return {};
         }
       ),
       onDraggingUpdate: assign(
@@ -139,24 +143,24 @@ const dragAndDropMachine = createMachine<
 const dragAndDropService = interpret(dragAndDropMachine)
   .onTransition((state, event) => {
     if (state.changed) {
-      const target = document.getElementById(state.context.id);
+
 
       switch (state.value) {
         case "dragging": {
           const draggable = state.context.draggables.get(state.context.id);
-          target.dataset.dragging = "true";
-          target.style.setProperty(
+          state.context.node.dataset.dragging = "true";
+          state.context.node.style.setProperty(
             "left",
             `${draggable.x + state.context.dx}px`
           );
-          target.style.setProperty(
+          state.context.node.style.setProperty(
             "top",
             `${draggable.y + state.context.dy}px`
           );
           break;
         }
         case "idle": {
-          target.dataset.dragging = "false";
+          state.context.node.dataset.dragging = "false";
           break;
         }
       }
